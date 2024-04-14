@@ -2,12 +2,12 @@ import mongoose, { Mongoose } from "mongoose";
 
 const MONGODB_URL = process.env.MONGODB_URL;
 
-interface mongooseConnection {
+interface MongooseConnection {
   conn: Mongoose | null;
   promise: Promise<Mongoose> | null;
 }
 
-let cached: mongooseConnection = (global as any).mongoose;
+let cached: MongooseConnection = (global as any).mongoose;
 
 if (!cached) {
   cached = (global as any).mongoose = {
@@ -18,12 +18,13 @@ if (!cached) {
 
 export const connectToDatabase = async () => {
   if (cached.conn) return cached.conn;
-  if (!MONGODB_URL) throw new Error("Missing MONGODB_URL is not defined");
+
+  if (!MONGODB_URL) throw new Error("Missing MONGODB_URL");
 
   cached.promise =
     cached.promise ||
     mongoose.connect(MONGODB_URL, {
-      dbName: "Imaginify",
+      dbName: "imaginify",
       bufferCommands: false,
     });
 
